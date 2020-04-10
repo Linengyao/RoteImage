@@ -20,6 +20,7 @@ int main()
 	//旋转中心为图像中心
 	cv::Point2f center(srcMat.cols*0.5, srcMat.rows*0.5);
 
+
 	//获得变换矩阵
 	 cv::Mat	rot = cv::getRotationMatrix2D(center, angle, scale);
 	 //获取外接四边形
