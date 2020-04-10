@@ -2,10 +2,38 @@
 //
 
 #include <iostream>
-
+#include <opencv.hpp>
+using namespace cv;
+using namespace std;
 int main()
 {
-    std::cout << "Hello World!\n";
+	cv::Mat dstMat;
+	cv::Mat	srcMat = cv::imread("E:\\课程\\大二下\\数字图像处理\\lena.jpg", 1);
+	int width = srcMat.cols;
+	int height = srcMat.rows;
+	if (srcMat.empty())	return -1;
+	//旋转-10°
+	float angle = -10.0;
+
+	float scale = 1;
+
+	//旋转中心为图像中心
+	cv::Point2f center(srcMat.cols*0.5, srcMat.rows*0.5);
+
+	//获得变换矩阵
+	 cv::Mat	rot = cv::getRotationMatrix2D(center, angle, scale);
+	 //获取外接四边形
+	cv::Rect bbox = cv::RotatedRect(center, srcMat.size(), angle).boundingRect();
+	//调整仿射矩阵参数
+	rot.at<double>(0, 2) += bbox.width / 2.0 - center.x;
+	rot.at<double>(1, 2) += bbox.height / 2.0 - center.y;
+
+	cv::warpAffine(srcMat, dstMat, rot, bbox.size());
+
+	cv::imshow("src", srcMat);
+	cv::imshow("dst", dstMat);
+	cv::waitKey(0);
+    //std::cout << "Hello World!\n";
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
